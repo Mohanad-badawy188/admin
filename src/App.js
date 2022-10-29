@@ -30,8 +30,10 @@ const Others = styled.div`
 function  App () {
   let admin = ''
   const user =  useSelector(state => state.user.user)
+  console.log(user)
   if  (user){
-     admin= JSON.parse(JSON.parse(localStorage.getItem("persist:root")).user).user.isAdmin;
+     admin= JSON.parse(JSON.parse(localStorage.getItem("persist:root")).user).user.foundUser.isAdmin;
+     console.log(admin)
 
   }
 

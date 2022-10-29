@@ -160,13 +160,17 @@ function User() {
   const location = useLocation();
   const userId =location.pathname.split("/")[2];
  
-const [user,setUser]= useState([])
+  const [user,setUser]= useState([])
+  const [email,setEmail]= useState("")
 
+  const [name,setName]= useState("")
+
+  const TOKEN =JSON.parse(JSON.parse(localStorage.getItem("persist:root")).user).user.accessToken;
 
 useEffect(() => {
     
   const getUser = async ()=>{
-    const TOKEN =JSON.parse(JSON.parse(localStorage.getItem("persist:root")).user).user.accessToken; 
+     
     try{
         const res = await axios({
         method: 'get',
@@ -187,7 +191,20 @@ useEffect(() => {
   
   },[])
   
+  const updateUser = async () => {
 
+    console.log(user);
+    try {
+      const res = await axios({
+        method: "put",
+        url: `http://localhost:5000/api/users/${user._id}`,
+        headers: { token: `Bearer ${TOKEN}` },
+        data: { name, email },
+      });
+      setUser(res.data);
+      console.log(res.data);
+    } catch {}
+  };
 
 
   return (
@@ -251,14 +268,14 @@ useEffect(() => {
                 <EditItem>
                   {" "}
                   <EditName>Full Name </EditName>{" "}
-                  <EditInput placeholder={user.name} />{" "}
+                  <EditInput placeholder={user.name} onChange={(e)=>{setName(e.target.value)}}/>{" "}
                 </EditItem>
                 <EditItem>
                   {" "}
                   <EditName>Email </EditName>{" "}
-                  <EditInput placeholder={user.email} />{" "}
+                  <EditInput placeholder={user.email} onChange={(e)=>{setEmail(e.target.value)}} />{" "}
                 </EditItem>
-            
+                Upload
               
                 <EditItem>
                   {" "}
@@ -272,7 +289,7 @@ useEffect(() => {
                }/>
                 <UpdateBtn><Upload /></UpdateBtn>
               </ImgAndButton>
-              <UploadBtn>Upload</UploadBtn>
+              <UploadBtn onClick = {updateUser}>Upload</UploadBtn>
               </UploadAll>
             </EditContainer>
           </Container>
